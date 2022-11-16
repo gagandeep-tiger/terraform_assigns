@@ -1,0 +1,10 @@
+{
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "check",
+            "type": "tag",
+            "background": "#ff2c84",
+            "foreground": "#ffff"  
+        },
+    }
+}
