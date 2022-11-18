@@ -7,10 +7,7 @@ resource "azurerm_virtual_network" "ascale" {
 
   address_space = ["10.0.0.0/16"]
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-  }
+  tags = var.tag
 }
 
 # SubNet
@@ -66,5 +63,5 @@ resource "azurerm_network_security_group" "ascale" {
     source_address_prefix = "*"
     source_port_range = "*"
   }]
-
+  tags = var.tag
 }
