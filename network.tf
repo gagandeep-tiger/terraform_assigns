@@ -1,34 +1,70 @@
-# vnet
-resource "azurerm_virtual_network" "demo" {
-  name = "${var.prefix}-network"
+# VNet
+resource "azurerm_virtual_network" "ascale" {
+  
+  name = "${var.prefix}-vnet"
+  resource_group_name = azurerm_resource_group.mle-cloud-training.name
   location = var.location
-  resource_group_name = azurerm_resource_group.mle-cloud-training.name
-  address_space = [ "10.0.0.0/16" ]
-}
 
-# subnet
-resource "azurerm_subnet" "demo-internal-1" {
-  name = "${var.prefix}-internal-1"
-  resource_group_name = azurerm_resource_group.mle-cloud-training.name
-  virtual_network_name = azurerm_virtual_network.demo.name
-  address_prefixes = [ "10.0.0.0/24" ]
-}
+  address_space = ["10.0.0.0/16"]
 
-# security group
-resource "azurerm_network_security_group" "allow-ssh" {
-  name = "${var.prefix}-allow-ssh"
-  location = var.location
-  resource_group_name = azurerm_resource_group.mle-cloud-training.name
-
-  security_rule {
-    name = "SSH"
-    priority = 1001
-    direction = "Inbound"
-    access = "Allow"
-    protocol = "Tcp"
-    source_port_range = "*"
-    destination_port_range = "22"
-    source_address_prefix = var.ssh-source-address
-    destination_address_prefix = "*"
+  tags = {
+    "created_by" = "gagandeep.prasad@tigeranalytics.com"
+    "created_for" = "terraform-tut"
   }
+}
+
+# SubNet
+resource "azurerm_subnet" "ascale" {
+  
+  name = "${var.prefix}-subnet"
+  resource_group_name = azurerm_resource_group.mle-cloud-training.name
+  virtual_network_name = azurerm_virtual_network.ascale.name
+
+  address_prefixes = [ "10.0.1.0/24" ]
+}
+
+# NSG
+resource "azurerm_network_security_group" "ascale" {
+  
+  name = "${var.prefix}-nsg"
+  resource_group_name = azurerm_resource_group.mle-cloud-training.name
+  location = var.location
+
+  security_rule = [ {
+    access = "Allow"
+    description = "loadbalancer-nsg-allow"
+    destination_address_prefix = "*"
+    destination_port_range = "80"
+    direction = "Inbound"
+    name = "HTTP"
+    priority = 1001
+    protocol = "Tcp"
+    source_address_prefix = "*"
+    source_port_range = "*"
+  },
+  {
+    access = "Allow"
+    description = "loadbalancer-nsg-ssh"
+    destination_address_prefix = "*"
+    destination_port_range = "22"
+    direction = "Inbound"
+    name = "SSH"
+    priority = 1002
+    protocol = "Tcp"
+    source_address_prefix = var.ssh-source-address
+    source_port_range = "22"
+  }, 
+  {
+    access = "Deny"
+    description = "loadbalancer-nsg-deny"
+    destination_address_prefix = "*"
+    destination_port_range = "*"
+    direction = "Inbound"
+    name = "HTTP-Deny"
+    priority = 1003
+    protocol = "*"
+    source_address_prefix = "*"
+    source_port_range = "*"
+  }]
+
 }

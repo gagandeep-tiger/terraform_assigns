@@ -5,7 +5,7 @@ variable "location" {
 
 variable "prefix" {
   type = string
-  default = "demo"
+  default = "autoscaling"
 }
 
 variable "ssh-source-address" {
