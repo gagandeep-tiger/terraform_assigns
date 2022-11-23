@@ -27,7 +27,9 @@ resource "azurerm_network_security_group" "ascale" {
   resource_group_name = azurerm_resource_group.mle-cloud-training.name
   location = var.location
 
-  security_rule = [ {
+  
+
+  security_rule {
     access = "Allow"
     description = "loadbalancer-nsg-allow"
     destination_address_prefix = "*"
@@ -38,8 +40,8 @@ resource "azurerm_network_security_group" "ascale" {
     protocol = "Tcp"
     source_address_prefix = "*"
     source_port_range = "*"
-  },
-  {
+  }
+  security_rule {
     access = "Allow"
     description = "loadbalancer-nsg-ssh"
     destination_address_prefix = "*"
@@ -50,8 +52,8 @@ resource "azurerm_network_security_group" "ascale" {
     protocol = "Tcp"
     source_address_prefix = var.ssh-source-address
     source_port_range = "22"
-  }, 
-  {
+  }
+  security_rule {
     access = "Deny"
     description = "loadbalancer-nsg-deny"
     destination_address_prefix = "*"
@@ -62,6 +64,7 @@ resource "azurerm_network_security_group" "ascale" {
     protocol = "*"
     source_address_prefix = "*"
     source_port_range = "*"
-  }]
+  }
   tags = var.tag
 }
+

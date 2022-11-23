@@ -33,10 +33,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "ascale" {
       name = "${var.prefix}-scaleset-ipconfig"
       primary = true
       subnet_id = azurerm_subnet.ascale.id
-    #   load_balancer_backend_address_pool_ids = [ "value" ] //TODO: set lb_pool
-    #   load_balancer_inbound_nat_rules_ids = [ "value" ] //TODO: set nat rules
+      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.ascale.id]
+      load_balancer_inbound_nat_rules_ids = [ azurerm_lb_nat_pool.ascale.id ]
     }
-
   }
-  
+  tags = var.tag
 }
