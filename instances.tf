@@ -26,10 +26,7 @@ resource "azurerm_linux_virtual_machine" "vm_1" {
     version   = "latest"
   }
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 # NIC-1
 resource "azurerm_network_interface" "NIC_1" {
@@ -44,10 +41,7 @@ resource "azurerm_network_interface" "NIC_1" {
     public_ip_address_id = azurerm_public_ip.public_ip_1.id
   }
   
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 
 
@@ -79,10 +73,7 @@ resource "azurerm_linux_virtual_machine" "vm_2" {
     version   = "latest"
   }
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 # NIC-2
 resource "azurerm_network_interface" "NIC_2" {
@@ -97,10 +88,7 @@ resource "azurerm_network_interface" "NIC_2" {
     public_ip_address_id = azurerm_public_ip.public_ip_2.id
   }
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 
 # NI_NSG_ASS-1 && NI_NSG_ASS-2
@@ -120,10 +108,7 @@ resource "azurerm_application_security_group" "ASG_1" {
   location            = var.location
   resource_group_name = azurerm_resource_group.mle-cloud-training.name
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 
 # NI_ASG_ASS-2 && NI_ASG_ASS-1
@@ -165,10 +150,7 @@ resource "azurerm_linux_virtual_machine" "vm_3" {
     version   = "latest"
   }
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 # NIC-3
 resource "azurerm_network_interface" "NIC_3" {
@@ -182,10 +164,7 @@ resource "azurerm_network_interface" "NIC_3" {
     private_ip_address_allocation = "Dynamic"
   }
   
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 
 # NI_NSG_ASS-3

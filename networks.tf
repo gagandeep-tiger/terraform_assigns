@@ -3,10 +3,7 @@ resource "azurerm_virtual_network" "vnet" {
   location = var.location
   resource_group_name = azurerm_resource_group.mle-cloud-training.name
   address_space = [ "10.0.0.0/16" ]
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 
 }
 
@@ -30,10 +27,7 @@ resource "azurerm_public_ip" "public_ip_1" {
   resource_group_name = azurerm_resource_group.mle-cloud-training.name
   allocation_method = "Static"
   domain_name_label = "${var.prefix}-public_ip_1"
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 
 resource "azurerm_public_ip" "public_ip_2" {
@@ -42,10 +36,7 @@ resource "azurerm_public_ip" "public_ip_2" {
   resource_group_name = azurerm_resource_group.mle-cloud-training.name
   allocation_method = "Static"
   domain_name_label = "${var.prefix}-public_ip_2"
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 
 # NSG1
@@ -78,10 +69,7 @@ resource "azurerm_network_security_group" "NSG_1" {
     destination_address_prefix = "*"
   }
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
 
 # NSG2
@@ -114,8 +102,5 @@ resource "azurerm_network_security_group" "NSG_2" {
     destination_address_prefix = "*"
   }
 
-  tags = {
-    "created_by" = "gagandeep.prasad@tigeranalytics.com"
-    "created_for" = "terraform-tut"
-    }
+  tags = var.tags
 }
