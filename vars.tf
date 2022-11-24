@@ -18,6 +18,14 @@ variable "ssh-source-address" {
   default = "*"
 }
 
+variable "rg-tags" {
+  type = map(string)
+  default = {
+    "created_by" = "gagandeep.prasad@tigeranalytics.com"
+    "created_for" = "terraform-tut"
+  }
+}
+
 variable "tag" {
   type = map(string)
   default = {
