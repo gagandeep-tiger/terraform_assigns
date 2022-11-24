@@ -20,3 +20,11 @@ variable "tags" {
     "created_for" = "terraform-tut"
   }
 }
+
+variable "rg-tags" {
+  type = map(string)
+  default = {
+    "created_by" = "gagandeep.prasad@tigeranalytics.com"
+    "created_for" = "terraform-tut"
+  }
+}
