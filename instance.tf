@@ -1,23 +1,17 @@
-# instance
-resource "azurerm_linux_virtual_machine" "demo-instance" {
-  name = "${var.prefix}-vm-1"
-  location = var.location
+# VMSS-1
+resource "azurerm_linux_virtual_machine_scale_set" "mars-vmss1" {
+  name                = "${var.prefix}-vmss1"
   resource_group_name = azurerm_resource_group.mle-cloud-training.name
-  size = "Standard_D2s_v3"
-  admin_username = "ggndp"
-
-  network_interface_ids = [
-      azurerm_network_interface.demo-instance.id
-    ]
+  location            = azurerm_resource_group.mle-cloud-training.location
+  sku                 = "Standard_D2s_v3"
+  instances           = 1
+  admin_username      = "ggndp"
+  
+  //TODO: E-AutoScaling 
 
   admin_ssh_key {
-    username = "ggndp"
+    username   = "ggndp"
     public_key = file("mykey.pub")
-  }
-
-  os_disk {
-    caching = "ReadWrite"
-    storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
@@ -26,32 +20,65 @@ resource "azurerm_linux_virtual_machine" "demo-instance" {
     sku       = "16.04-LTS"
     version   = "latest"
   }
-}
 
-# network interface
-resource "azurerm_network_interface" "demo-instance" {
-  name = "${var.prefix}-instance1"
-  location = var.location
-  resource_group_name = azurerm_resource_group.mle-cloud-training.name
-
-  ip_configuration {
-    name = "instance1"
-    subnet_id = azurerm_subnet.demo-internal-1.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = azurerm_public_ip.demo-instance.id
+  os_disk {
+    storage_account_type = "Standard_LRS"
+    caching              = "ReadWrite"
   }
+
+  network_interface {
+    name    = "${var.prefix}-vmss1-NIC1"
+    primary = true
+    network_security_group_id = azurerm_network_security_group.mars-vmss1.id
+    ip_configuration {
+      name      = "internal"
+      primary   = true
+      subnet_id = azurerm_subnet.mars-subnet-internal.id
+      application_gateway_backend_address_pool_ids = [for value in azurerm_application_gateway.network.backend_address_pool.*.id : value if "${var.prefix}-gateway-beap-1" == value]
+    }
+  }
+  tags = var.tags
 }
 
-# public Ip
-resource "azurerm_public_ip" "demo-instance" {
-  name = "instance1-public-ip"
-  location = var.location
+# VMSS-2
+resource "azurerm_linux_virtual_machine_scale_set" "mars-vmss2" {
+  name                = "${var.prefix}-vmss2"
   resource_group_name = azurerm_resource_group.mle-cloud-training.name
-  allocation_method = "Dynamic"
-}
+  location            = azurerm_resource_group.mle-cloud-training.location
+  sku                 = "Standard_D2s_v3"
+  instances           = 1
+  admin_username      = "ggndp"
 
-# NIC_SG_assoc
-resource "azurerm_network_interface_security_group_association" "allow-ssh" {
-  network_interface_id = azurerm_network_interface.demo-instance.id
-  network_security_group_id = azurerm_network_security_group.allow-ssh.id
+  //TODO: E-AutoScaling 
+
+  admin_ssh_key {
+    username   = "ggndp"
+    public_key = file("mykey.pub")
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  os_disk {
+    storage_account_type = "Standard_LRS"
+    caching              = "ReadWrite"
+  }
+
+  network_interface {
+    name    = "${var.prefix}-vmss2-NIC1"
+    primary = true
+    network_security_group_id = azurerm_network_security_group.mars-vmss2.id
+
+    ip_configuration {
+      name      = "internal"
+      primary   = true
+      subnet_id = azurerm_subnet.mars-subnet-internal.id
+      application_gateway_backend_address_pool_ids = [for value in azurerm_application_gateway.network.backend_address_pool.*.id : value if "${var.prefix}-gateway-beap-2" == value]
+    }
+  }
+  tags = var.tags
 }
